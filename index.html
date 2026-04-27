@@ -33,12 +33,19 @@
         .about-title { font-size: 0.8rem; letter-spacing: 4px; color: var(--red); margin-bottom: 20px; font-weight: 700; text-transform: uppercase; }
         .about-text { font-size: 1.1rem; line-height: 1.8; color: #ccc; font-weight: 300; }
 
+        /* SKILLS SECTION */
         .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); background: var(--dark); border-bottom: 1px solid #222; }
         .skill-box { padding: 60px 20px; text-align: center; border-right: 1px solid #222; border-bottom: 1px solid #222; }
         .circle-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; }
         .circle-wrap svg { transform: rotate(-90deg); width: 100px; height: 100px; }
         .circle-wrap circle { fill: none; stroke-width: 6; stroke: #222; }
-        .progress { stroke: var(--red); stroke-dasharray: 283; stroke-dashoffset: 283; transition: 2s ease-in-out; }
+        
+        .progress { 
+            stroke: var(--red); 
+            stroke-dasharray: 283; 
+            stroke-dashoffset: 283; /* Initial state: empty */
+            transition: stroke-dashoffset 2s ease-in-out; /* Animation speed */
+        }
 
         .gallery { padding: 80px 8%; background: var(--black); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -74,30 +81,38 @@
         <div class="about-content">
             <h2 class="about-title">About Me</h2>
             <p class="about-text">
-                Creative and detail-oriented Interior Designer with over 4+ years of experience in residential, retail, and hospitality projects. Proven ability to translate client needs into functional, aesthetically appealing spaces, resulting in a 85% increase in client satisfaction. Skilled in Coohom, VR Studio, SketchUp, D5 Render, AutoCAD, Lumion and sustainable design solutions.
+                Creative and detail-oriented Interior Designer with over 4+ years of experience in residential, retail, and hospitality projects. Skilled in Coohom, VR Studio, SketchUp, D5 Render, AutoCAD, Lumion and sustainable design solutions.
             </p>
         </div>
     </section>
 
     <section class="skills">
         <div class="skill-box">
-            <div class="circle-wrap"><svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p1" cx="50" cy="50" r="45"></circle></svg>
-            <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">100%</div></div>
+            <div class="circle-wrap">
+                <svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p1" cx="50" cy="50" r="45"></circle></svg>
+                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">100%</div>
+            </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">SKETCHUP</p>
         </div>
         <div class="skill-box">
-            <div class="circle-wrap"><svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p2" cx="50" cy="50" r="45"></circle></svg>
-            <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">100%</div></div>
+            <div class="circle-wrap">
+                <svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p2" cx="50" cy="50" r="45"></circle></svg>
+                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">100%</div>
+            </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">COOHOM</p>
         </div>
         <div class="skill-box">
-            <div class="circle-wrap"><svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p3" cx="50" cy="50" r="45"></circle></svg>
-            <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">95%</div></div>
+            <div class="circle-wrap">
+                <svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p3" cx="50" cy="50" r="45"></circle></svg>
+                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">95%</div>
+            </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">D5 RENDER</p>
         </div>
         <div class="skill-box" style="border-right: none;">
-            <div class="circle-wrap"><svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p4" cx="50" cy="50" r="45"></circle></svg>
-            <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">85%</div></div>
+            <div class="circle-wrap">
+                <svg><circle cx="50" cy="50" r="45"></circle><circle class="progress" id="p4" cx="50" cy="50" r="45"></circle></svg>
+                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">85%</div>
+            </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">LUMION</p>
         </div>
     </section>
@@ -112,11 +127,13 @@
     </footer>
 
     <script>
+        // Gallery Generation
         const grid = document.getElementById('gallery-grid');
         for (let i = 1; i <= 20; i++) {
             grid.innerHTML += `<div class="card"><img src="${i}.jpg" onerror="this.src='${i}.png';"></div>`;
         }
 
+        // Typewriter Effect
         const text = "INTERIOR\nDESIGNER";
         let j = 0;
         function type() {
@@ -126,13 +143,33 @@
                 setTimeout(type, 150);
             }
         }
-        function animate() {
-            document.getElementById('p1').style.strokeDashoffset = 0;
-            document.getElementById('p2').style.strokeDashoffset = 0;
-            document.getElementById('p3').style.strokeDashoffset = 283 * (1 - 0.95);
-            document.getElementById('p4').style.strokeDashoffset = 283 * (1 - 0.85);
+
+        // Progress Circle Animation Logic
+        function animateSkills() {
+            const skillLevels = {
+                'p1': 100,
+                'p2': 100,
+                'p3': 95,
+                'p4': 85
+            };
+
+            const circumference = 2 * Math.PI * 45; // Approx 283
+
+            for (let id in skillLevels) {
+                const percent = skillLevels[id];
+                const offset = circumference - (percent / 100) * circumference;
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.strokeDashoffset = offset;
+                }
+            }
         }
-        window.onload = () => { setTimeout(type, 500); setTimeout(animate, 1000); };
+
+        window.onload = () => { 
+            setTimeout(type, 500); 
+            // Trigger animation slightly after load
+            setTimeout(animateSkills, 1000); 
+        };
     </script>
 </body>
 </html>
