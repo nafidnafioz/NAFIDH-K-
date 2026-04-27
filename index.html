@@ -33,55 +33,48 @@
         .about-title { font-size: 0.8rem; letter-spacing: 4px; color: var(--red); margin-bottom: 20px; font-weight: 700; text-transform: uppercase; }
         .about-text { font-size: 1.1rem; line-height: 1.8; color: #ccc; font-weight: 300; }
 
-        /* --- NEW STABLE SKILLS DESIGN --- */
+        /* --- STABLE CIRCLE DESIGN --- */
         .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); background: var(--dark); border-bottom: 1px solid #222; }
         .skill-box { padding: 60px 20px; text-align: center; border-right: 1px solid #222; border-bottom: 1px solid #222; }
         
-        /* Circular Progress using Conic Gradient */
-        .circle-progress {
+        .circle-container {
+            position: relative;
             width: 100px;
             height: 100px;
-            border-radius: 50%;
             margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #222; /* Empty color */
-            position: relative;
-            transition: 2s ease-in-out;
-        }
-
-        /* The fill animation */
-        .circle-progress::before {
-            content: "";
-            position: absolute;
-            inset: 0;
             border-radius: 50%;
-            background: conic-gradient(var(--red) var(--p), transparent 0);
-            transition: --p 2s ease-in-out;
+            background: #222; /* Default background */
         }
 
-        /* The inner black circle to make it a ring */
-        .circle-progress::after {
+        /* Inner Black Circle to create the ring effect */
+        .circle-container::after {
             content: "";
             position: absolute;
-            inset: 8px; /* Thickness */
+            inset: 8px;
             background: var(--dark);
             border-radius: 50%;
+            z-index: 2;
         }
 
-        .percentage-text {
-            position: relative;
-            z-index: 10;
+        .percentage-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
             font-weight: 700;
             font-size: 1.1rem;
         }
 
-        /* Individual Skill Values */
-        #c1 { --p: 100%; }
-        #c2 { --p: 100%; }
-        #c3 { --p: 95%; }
-        #c4 { --p: 85%; }
+        /* Specific Skill Fills */
+        /* Sketchup - 100% */
+        .fill-100 { background: conic-gradient(var(--red) 360deg, transparent 0); }
+        /* Coohom - 100% */
+        .fill-coohom { background: conic-gradient(var(--red) 360deg, transparent 0); }
+        /* D5 Render - 95% */
+        .fill-95 { background: conic-gradient(var(--red) 342deg, transparent 0); }
+        /* Lumion - 85% */
+        .fill-85 { background: conic-gradient(var(--red) 306deg, transparent 0); }
 
         .gallery { padding: 80px 8%; background: var(--black); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -122,26 +115,26 @@
 
     <section class="skills">
         <div class="skill-box">
-            <div class="circle-progress" id="c1">
-                <div class="percentage-text">100%</div>
+            <div class="circle-container fill-100">
+                <div class="percentage-label">100%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">SKETCHUP</p>
         </div>
         <div class="skill-box">
-            <div class="circle-progress" id="c2">
-                <div class="percentage-text">100%</div>
+            <div class="circle-container fill-coohom">
+                <div class="percentage-label">100%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">COOHOM</p>
         </div>
         <div class="skill-box">
-            <div class="circle-progress" id="c3">
-                <div class="percentage-text">95%</div>
+            <div class="circle-container fill-95">
+                <div class="percentage-label">95%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">D5 RENDER</p>
         </div>
         <div class="skill-box" style="border-right: none;">
-            <div class="circle-progress" id="c4">
-                <div class="percentage-text">85%</div>
+            <div class="circle-container fill-85">
+                <div class="percentage-label">85%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">LUMION</p>
         </div>
