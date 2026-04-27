@@ -18,7 +18,7 @@
 
         .logo { font-size: 1.2rem; font-weight: 700; letter-spacing: 5px; margin-bottom: 40px; }
         .logo span { color: var(--red); }
-        .main-title { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 10px; text-transform: uppercase; white-space: pre-line; }
+        .main-title { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 10px; text-transform: uppercase; white-space: pre-line; min-height: 2.2em; }
         
         .location-tag { font-size: 0.9rem; font-weight: 700; color: #fff; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; display: flex; align-items: center; }
         .cursor { display: inline-block; width: 10px; height: 1.2em; background: var(--red); margin-left: 8px; animation: blink 0.7s infinite; }
@@ -33,18 +33,19 @@
         .about-title { font-size: 0.8rem; letter-spacing: 4px; color: var(--red); margin-bottom: 20px; font-weight: 700; text-transform: uppercase; }
         .about-text { font-size: 1.1rem; line-height: 1.8; color: #ccc; font-weight: 300; }
 
-        /* SKILLS SECTION */
         .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); background: var(--dark); border-bottom: 1px solid #222; }
         .skill-box { padding: 60px 20px; text-align: center; border-right: 1px solid #222; border-bottom: 1px solid #222; }
         .circle-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; }
         .circle-wrap svg { transform: rotate(-90deg); width: 100px; height: 100px; }
         .circle-wrap circle { fill: none; stroke-width: 6; stroke: #222; }
         
+        /* Initial state of the progress circles */
         .progress { 
             stroke: var(--red); 
             stroke-dasharray: 283; 
-            stroke-dashoffset: 283; /* Thudakkathil empty aayi kidakkan */
-            transition: stroke-dashoffset 2s ease-in-out; /* Animation speed */
+            stroke-dashoffset: 283; /* Starts empty */
+            transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1); 
+            stroke-linecap: round;
         }
 
         .gallery { padding: 80px 8%; background: var(--black); }
@@ -55,7 +56,7 @@
 
         footer { padding: 50px 8%; text-align: center; border-top: 1px solid #222; background: var(--dark); color: #666; font-size: 0.8rem; letter-spacing: 2px; }
 
-        @media (max-width: 768px) { .hero { flex-direction: column-reverse; } .hero-right { height: 450px; } }
+        @media (max-width: 768px) { .hero { flex-direction: column-reverse; } .hero-right { height: 450px; } .skill-box { border-right: none; } }
     </style>
 </head>
 <body>
@@ -81,7 +82,7 @@
         <div class="about-content">
             <h2 class="about-title">About Me</h2>
             <p class="about-text">
-                Creative and detail-oriented Interior Designer with over 4+ years of experience in residential, retail, and hospitality projects. Proven ability to translate client needs into functional, aesthetically appealing spaces. Skilled in Coohom, VR Studio, SketchUp, D5 Render, AutoCAD, Lumion and sustainable design solutions.
+                Creative and detail-oriented Interior Designer with over 4+ years of experience. Skilled in Coohom, VR Studio, SketchUp, D5 Render, AutoCAD, Lumion and sustainable design solutions.
             </p>
         </div>
     </section>
@@ -131,49 +132,65 @@
     </footer>
 
     <script>
-        // Gallery generation
+        // 1. Gallery Generation
         const grid = document.getElementById('gallery-grid');
         for (let i = 1; i <= 20; i++) {
-            grid.innerHTML += `<div class="card"><img src="${i}.jpg" onerror="this.src='${i}.png';"></div>`;
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `<img src="${i}.jpg" onerror="this.src='${i}.png';">`;
+            grid.appendChild(card);
         }
 
-        // Typewriter effect
-        const text = "INTERIOR\nDESIGNER";
-        let j = 0;
-        function type() {
-            if (j < text.length) {
-                document.getElementById("type").textContent += text.charAt(j);
-                j++;
-                setTimeout(type, 150);
-            }
-        }
+        // 2. Typewriter Effect
+        const textArray = ["INTERIOR", "DESIGNER"];
+        const typeEl = document.getElementById("type");
+        let line = 0;
+        let charIndex = 0;
 
-        // Skill animation logic based on percentages
-        function animateSkills() {
-            const skillLevels = {
-                'p1': 100,
-                'p2': 100,
-                'p3': 95,
-                'p4': 85
-            };
-
-            const circumference = 283; 
-
-            for (let id in skillLevels) {
-                const percent = skillLevels[id];
-                const offset = circumference - (percent / 100) * circumference;
-                const element = document.getElementById(id);
-                if (element) {
-                    element.style.strokeDashoffset = offset;
+        function typeEffect() {
+            if (line < textArray.length) {
+                if (charIndex < textArray[line].length) {
+                    typeEl.textContent += textArray[line].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeEffect, 100);
+                } else {
+                    typeEl.textContent += "\n";
+                    line++;
+                    charIndex = 0;
+                    setTimeout(typeEffect, 200);
                 }
             }
         }
 
-        // Trigger animations on window load
-        window.onload = () => { 
-            setTimeout(type, 500); 
-            setTimeout(animateSkills, 1000); 
-        };
+        // 3. Circle Animation (Triggers when visible)
+        function animateSkills() {
+            const skillLevels = { 'p1': 100, 'p2': 100, 'p3': 95, 'p4': 85 };
+            const circumference = 283; 
+
+            Object.keys(skillLevels).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    const percent = skillLevels[id];
+                    const offset = circumference - (percent / 100) * circumference;
+                    element.style.strokeDashoffset = offset;
+                }
+            });
+        }
+
+        // 4. Scroll Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    animateSkills();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        // Start everything on load
+        window.addEventListener('load', () => {
+            setTimeout(typeEffect, 500);
+            observer.observe(document.querySelector('.skills'));
+        });
     </script>
 </body>
 </html>
