@@ -33,32 +33,55 @@
         .about-title { font-size: 0.8rem; letter-spacing: 4px; color: var(--red); margin-bottom: 20px; font-weight: 700; text-transform: uppercase; }
         .about-text { font-size: 1.1rem; line-height: 1.8; color: #ccc; font-weight: 300; }
 
-        /* --- SKILLS SECTION (RE-BUILT FOR STABILITY) --- */
+        /* --- NEW STABLE SKILLS DESIGN --- */
         .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); background: var(--dark); border-bottom: 1px solid #222; }
         .skill-box { padding: 60px 20px; text-align: center; border-right: 1px solid #222; border-bottom: 1px solid #222; }
-        .circle-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; }
-        .circle-wrap svg { transform: rotate(-90deg); width: 100px; height: 100px; overflow: visible; }
-        .circle-wrap circle { fill: none; stroke-width: 8; stroke: #222; }
         
-        /* The Red Progress Line */
-        .progress { 
-            stroke: var(--red); 
-            stroke-dasharray: 283; 
-            stroke-dashoffset: 283; /* Start empty */
-            stroke-linecap: round;
-            /* Direct CSS Animation */
-            animation: fillProgress 3s ease-in-out forwards;
-            animation-delay: 1s; /* Page load aayi 1 sec kazhinju thudangum */
+        /* Circular Progress using Conic Gradient */
+        .circle-progress {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222; /* Empty color */
+            position: relative;
+            transition: 2s ease-in-out;
         }
 
-        @keyframes fillProgress {
-            to { stroke-dashoffset: var(--target); }
+        /* The fill animation */
+        .circle-progress::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: conic-gradient(var(--red) var(--p), transparent 0);
+            transition: --p 2s ease-in-out;
         }
 
-        /* Specific percentages */
-        #p1, #p2 { --target: 0; }   /* 100% (283 - 283) */
-        #p3 { --target: 14; }       /* 95% (283 - 269) */
-        #p4 { --target: 42; }       /* 85% (283 - 241) */
+        /* The inner black circle to make it a ring */
+        .circle-progress::after {
+            content: "";
+            position: absolute;
+            inset: 8px; /* Thickness */
+            background: var(--dark);
+            border-radius: 50%;
+        }
+
+        .percentage-text {
+            position: relative;
+            z-index: 10;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Individual Skill Values */
+        #c1 { --p: 100%; }
+        #c2 { --p: 100%; }
+        #c3 { --p: 95%; }
+        #c4 { --p: 85%; }
 
         .gallery { padding: 80px 8%; background: var(--black); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -93,42 +116,32 @@
     <section class="about-section">
         <div class="about-content">
             <h2 class="about-title">About Me</h2>
-            <p class="about-text">
-                Creative and detail-oriented Interior Designer with over 4+ years of experience in residential, retail, and hospitality projects.
-            </p>
+            <p class="about-text">Creative and detail-oriented Interior Designer with over 4+ years of experience in residential, retail, and hospitality projects.</p>
         </div>
     </section>
 
     <section class="skills">
         <div class="skill-box">
-            <div class="circle-wrap">
-                <svg><circle cx="50" cy="50" r="45"></circle>
-                <circle class="progress" id="p1" cx="50" cy="50" r="45"></circle></svg>
-                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">100%</div>
+            <div class="circle-progress" id="c1">
+                <div class="percentage-text">100%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">SKETCHUP</p>
         </div>
         <div class="skill-box">
-            <div class="circle-wrap">
-                <svg><circle cx="50" cy="50" r="45"></circle>
-                <circle class="progress" id="p2" cx="50" cy="50" r="45"></circle></svg>
-                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">100%</div>
+            <div class="circle-progress" id="c2">
+                <div class="percentage-text">100%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">COOHOM</p>
         </div>
         <div class="skill-box">
-            <div class="circle-wrap">
-                <svg><circle cx="50" cy="50" r="45"></circle>
-                <circle class="progress" id="p3" cx="50" cy="50" r="45"></circle></svg>
-                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">95%</div>
+            <div class="circle-progress" id="c3">
+                <div class="percentage-text">95%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">D5 RENDER</p>
         </div>
         <div class="skill-box" style="border-right: none;">
-            <div class="circle-wrap">
-                <svg><circle cx="50" cy="50" r="45"></circle>
-                <circle class="progress" id="p4" cx="50" cy="50" r="45"></circle></svg>
-                <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:700;">85%</div>
+            <div class="circle-progress" id="c4">
+                <div class="percentage-text">85%</div>
             </div>
             <p style="font-size: 0.7rem; letter-spacing: 2px;">LUMION</p>
         </div>
@@ -142,13 +155,13 @@
     <footer>© 2026 NAFIDH K K | MALAPPURAM, KERALA</footer>
 
     <script>
-        // Gallery logic
+        // Gallery
         const grid = document.getElementById('gallery-grid');
         for (let i = 1; i <= 20; i++) {
             grid.innerHTML += `<div class="card"><img src="${i}.jpg" onerror="this.src='${i}.png';"></div>`;
         }
 
-        // Typewriter logic
+        // Typewriter
         const textArray = ["INTERIOR", "DESIGNER"];
         const typeEl = document.getElementById("type");
         let line = 0, charIndex = 0;
