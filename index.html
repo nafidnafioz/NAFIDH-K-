@@ -33,30 +33,32 @@
         .about-title { font-size: 0.8rem; letter-spacing: 4px; color: var(--red); margin-bottom: 20px; font-weight: 700; text-transform: uppercase; }
         .about-text { font-size: 1.1rem; line-height: 1.8; color: #ccc; font-weight: 300; }
 
+        /* --- SKILLS SECTION (RE-BUILT FOR STABILITY) --- */
         .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); background: var(--dark); border-bottom: 1px solid #222; }
         .skill-box { padding: 60px 20px; text-align: center; border-right: 1px solid #222; border-bottom: 1px solid #222; }
         .circle-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; }
-        .circle-wrap svg { transform: rotate(-90deg); width: 100px; height: 100px; }
+        .circle-wrap svg { transform: rotate(-90deg); width: 100px; height: 100px; overflow: visible; }
         .circle-wrap circle { fill: none; stroke-width: 8; stroke: #222; }
         
-        /* 100% RELIABLE CSS ANIMATION */
+        /* The Red Progress Line */
         .progress { 
             stroke: var(--red); 
             stroke-dasharray: 283; 
-            stroke-dashoffset: 283; 
+            stroke-dashoffset: 283; /* Start empty */
             stroke-linecap: round;
-            /* Page load aayi 1.5s kazhinju animation thudangum */
-            animation: fillCircle 2.5s ease-out forwards 1.5s;
+            /* Direct CSS Animation */
+            animation: fillProgress 3s ease-in-out forwards;
+            animation-delay: 1s; /* Page load aayi 1 sec kazhinju thudangum */
         }
 
-        @keyframes fillCircle {
-            to { stroke-dashoffset: var(--target-offset); }
+        @keyframes fillProgress {
+            to { stroke-dashoffset: var(--target); }
         }
 
-        /* Enthu mathram fill aakanam ennu ivide kodukkunnu */
-        #p1, #p2 { --target-offset: 0; }   /* 100% */
-        #p3 { --target-offset: 14; }        /* 95% */
-        #p4 { --target-offset: 42; }        /* 85% */
+        /* Specific percentages */
+        #p1, #p2 { --target: 0; }   /* 100% (283 - 283) */
+        #p3 { --target: 14; }       /* 95% (283 - 269) */
+        #p4 { --target: 42; }       /* 85% (283 - 241) */
 
         .gallery { padding: 80px 8%; background: var(--black); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -91,7 +93,9 @@
     <section class="about-section">
         <div class="about-content">
             <h2 class="about-title">About Me</h2>
-            <p class="about-text">Creative Interior Designer with 4+ years of experience. Expert in SketchUp, Coohom, and D5 Render.</p>
+            <p class="about-text">
+                Creative and detail-oriented Interior Designer with over 4+ years of experience in residential, retail, and hospitality projects.
+            </p>
         </div>
     </section>
 
@@ -138,31 +142,31 @@
     <footer>© 2026 NAFIDH K K | MALAPPURAM, KERALA</footer>
 
     <script>
-        // Gallery
+        // Gallery logic
         const grid = document.getElementById('gallery-grid');
         for (let i = 1; i <= 20; i++) {
             grid.innerHTML += `<div class="card"><img src="${i}.jpg" onerror="this.src='${i}.png';"></div>`;
         }
 
-        // Typewriter
+        // Typewriter logic
         const textArray = ["INTERIOR", "DESIGNER"];
         const typeEl = document.getElementById("type");
         let line = 0, charIndex = 0;
 
-        function typeEffect() {
+        function type() {
             if (line < textArray.length) {
                 if (charIndex < textArray[line].length) {
                     typeEl.textContent += textArray[line].charAt(charIndex);
                     charIndex++;
-                    setTimeout(typeEffect, 100);
+                    setTimeout(type, 150);
                 } else {
                     typeEl.textContent += "\n";
                     line++; charIndex = 0;
-                    setTimeout(typeEffect, 200);
+                    setTimeout(type, 300);
                 }
             }
         }
-        window.onload = () => setTimeout(typeEffect, 500);
+        window.onload = () => setTimeout(type, 500);
     </script>
 </body>
 </html>
