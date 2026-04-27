@@ -39,14 +39,23 @@
         .circle-wrap svg { transform: rotate(-90deg); width: 100px; height: 100px; }
         .circle-wrap circle { fill: none; stroke-width: 6; stroke: #222; }
         
-        /* Initial state of the progress circles */
+        /* CSS ONLY ANIMATION - MORE RELIABLE */
         .progress { 
             stroke: var(--red); 
             stroke-dasharray: 283; 
-            stroke-dashoffset: 283; /* Starts empty */
-            transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1); 
+            stroke-dashoffset: 283; 
             stroke-linecap: round;
         }
+
+        /* Percentage based classes */
+        .animate-p1 { animation: fill-100 2s ease-in-out forwards; }
+        .animate-p2 { animation: fill-100 2s ease-in-out forwards; }
+        .animate-p3 { animation: fill-95 2s ease-in-out forwards; }
+        .animate-p4 { animation: fill-85 2s ease-in-out forwards; }
+
+        @keyframes fill-100 { to { stroke-dashoffset: 0; } }
+        @keyframes fill-95 { to { stroke-dashoffset: 14; } } /* 283 * (1 - 0.95) */
+        @keyframes fill-85 { to { stroke-dashoffset: 42; } } /* 283 * (1 - 0.85) */
 
         .gallery { padding: 80px 8%; background: var(--black); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -132,65 +141,40 @@
     </footer>
 
     <script>
-        // 1. Gallery Generation
+        // 1. Gallery
         const grid = document.getElementById('gallery-grid');
         for (let i = 1; i <= 20; i++) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `<img src="${i}.jpg" onerror="this.src='${i}.png';">`;
-            grid.appendChild(card);
+            grid.innerHTML += `<div class="card"><img src="${i}.jpg" onerror="this.src='${i}.png';"></div>`;
         }
 
-        // 2. Typewriter Effect
-        const textArray = ["INTERIOR", "DESIGNER"];
-        const typeEl = document.getElementById("type");
-        let line = 0;
-        let charIndex = 0;
-
-        function typeEffect() {
-            if (line < textArray.length) {
-                if (charIndex < textArray[line].length) {
-                    typeEl.textContent += textArray[line].charAt(charIndex);
-                    charIndex++;
-                    setTimeout(typeEffect, 100);
-                } else {
-                    typeEl.textContent += "\n";
-                    line++;
-                    charIndex = 0;
-                    setTimeout(typeEffect, 200);
-                }
+        // 2. Typewriter
+        const text = "INTERIOR\nDESIGNER";
+        let j = 0;
+        function type() {
+            if (j < text.length) {
+                document.getElementById("type").textContent += text.charAt(j);
+                j++;
+                setTimeout(type, 150);
             }
         }
 
-        // 3. Circle Animation (Triggers when visible)
-        function animateSkills() {
-            const skillLevels = { 'p1': 100, 'p2': 100, 'p3': 95, 'p4': 85 };
-            const circumference = 283; 
-
-            Object.keys(skillLevels).forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    const percent = skillLevels[id];
-                    const offset = circumference - (percent / 100) * circumference;
-                    element.style.strokeDashoffset = offset;
-                }
-            });
-        }
-
-        // 4. Scroll Observer
+        // 3. Scroll Trigger for Circles
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting) {
-                    animateSkills();
+                    // Add animation classes when visible
+                    document.getElementById('p1').classList.add('animate-p1');
+                    document.getElementById('p2').classList.add('animate-p2');
+                    document.getElementById('p3').classList.add('animate-p3');
+                    document.getElementById('p4').classList.add('animate-p4');
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.3 });
 
-        // Start everything on load
-        window.addEventListener('load', () => {
-            setTimeout(typeEffect, 500);
+        window.onload = () => {
+            setTimeout(type, 500);
             observer.observe(document.querySelector('.skills'));
-        });
+        };
     </script>
 </body>
 </html>
